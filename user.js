@@ -6,6 +6,7 @@ var User = function(user) {
     this.location = user.location;
     this.join_year = user.join_year;
     this.email = user.email;
+    this.phone_number = user.phone_number;
 };
 
 User.createUser = function(newUser, result) {
@@ -19,7 +20,5 @@ User.createUser = function(newUser, result) {
     }
   });
 };
-
-
 
 module.exports = User;

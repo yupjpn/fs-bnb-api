@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 
 const User = require("./user");
+const Owner = require("./owner");
+const Property = require("./property");
 
 // why do we have this? do we need to keep this?
 app.use(express.json());
@@ -75,6 +77,14 @@ app.post("/api/users", (req, res) => {
 //     console.log(users);
 // });
 
+app.post("/api/owners", (req, res) => {
+    const owner = req.body;
+    Owner.createOwner(owner, (err, result) => {
+        console.log(err);
+        console.log(result);
+        return res.status(200).json({id: result});
+    });
+});
 
 
 // app.post("/api/users/authentication", (req, res) => {
@@ -115,6 +125,15 @@ app.post("/api/users", (req, res) => {
 //     }
 
 // });
+
+app.post("/api/properties", (req, res) => {
+    const property = req.body;
+    Property.createProperty(property, (err, result) => {
+        console.log(err);
+        console.log(result);
+        return res.status(200).json({id: result});
+    });
+});
 
 // // create new property, add to properties array
 // app.post("/api/properties", (req, res) => {
