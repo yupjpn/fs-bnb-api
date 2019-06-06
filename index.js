@@ -48,9 +48,6 @@ app.post("/api/users/authentication", (req, res) => {
     var cb = (err, result) => {
         console.log(err);
         console.log(result);
-        
-        // i guess if there is an error, it was taken care of in user.js
-
         return res.status(200).json({user: result});
     };
 

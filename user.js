@@ -50,25 +50,28 @@ User.createUser = function(newUser, cb) {
 };
 
 User.getUserByEmail = function(userEmail, cb) {
-  mysqlConn.query("SELECT * FROM user WHERE email = userEmail", userEmail, function(err, dbResult) {
+  mysqlConn.query("SELECT * FROM user WHERE email = ?", userEmail, function(err, dbResult) {
+    console.log(userEmail);
     if (err) {
       console.log("error: ", err);
-      return cb({message: "Failed to retrieve user with that email"});
+      return cb({message: err});
     }
     else {
       console.log(dbResult);
 
       // dbResult is an array of all the users that fit the criteria
       // if length is 0, this means they haven't registered yet
-      if (dbResult[0].length == 0) {
+      if (dbResult.length == 0) {
+        console.log("length is 0");
         return cb({message: "Your email doesn't exist in our database. Are you sure you've registered?"});
       }
-      else if (dbResult[0].length == 1) {
+      else if (dbResult.length == 1) {
+        console.log("length is 1");
         return cb(null, dbResult[0]);
       }
       // if array is not 0 or 1, something is messed up
       else {
-        return cb({message: "Something is really wrong. Apparently your email belongs to more than one existing user"});
+        return cb({message: "Your email appears to belongs to more than one existing user..."});
       }
     }
   });
