@@ -36,24 +36,27 @@ app.post("/api/users", (req, res) => {
     User.createUser(user, cb);
 });
 
-// app.post("/api/users/authentication", (req, res) => {
-//     const user = req.body;
-//     const userEmail = user.email;
-//     const userPassword = user.password;
-//     console.log(userEmail);
-//     console.log(userPassword);
+app.post("/api/users/authentication", (req, res) => {
+    const user = req.body;
+    const userEmail = user.email;
+    const userPassword = user.password;
+    console.log(userEmail);
+    console.log(userPassword);
 
-//     // DECLARING the callback for createUser, which will execute once all the query stuff
-//     // is done and the callback function in mysqlConn.query is finished
-//     var cb = (err, result) => {
-//         console.log(err);
-//         console.log(result);
-//         return res.status(200).json({user: result});
-//     };
+    // DECLARING the callback for createUser, which will execute once all the query stuff
+    // is done and the callback function in mysqlConn.query is finished
+    var cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+        
+        // i guess if there is an error, it was taken care of in user.js
 
-//     // CALLING the function createUser
-//     User.getUserByEmail(userEmail, cb);
-// });
+        return res.status(200).json({user: result});
+    };
+
+    // CALLING the function createUser
+    User.getUserByEmail(userEmail, cb);
+});
 
 // app.post("/api/users", (req, res) => {
 //     // req.body is what we input

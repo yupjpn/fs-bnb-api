@@ -49,18 +49,29 @@ User.createUser = function(newUser, cb) {
   });
 };
 
-// User.getUserByEmail = function(userEmail, cb) {
-//   mysqlConn.query("SELECT * FROM user WHERE email = userEmail", userEmail, function(err, dbResult) {
-//     if (err) {
-//       console.log("error: ", err);
-//       return cb({message: "Failed to retrieve user with that email"});
-//     }
-//     else {
-//       console.log(dbResult);
+User.getUserByEmail = function(userEmail, cb) {
+  mysqlConn.query("SELECT * FROM user WHERE email = userEmail", userEmail, function(err, dbResult) {
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: "Failed to retrieve user with that email"});
+    }
+    else {
+      console.log(dbResult);
 
-//       // 
-//     }
-//   });
-// };
+      // dbResult is an array of all the users that fit the criteria
+      // if length is 0, this means they haven't registered yet
+      if (dbResult[0].length == 0) {
+        return cb({message: "Your email doesn't exist in our database. Are you sure you've registered?"});
+      }
+      else if (dbResult[0].length == 1) {
+        return cb(null, dbResult[0]);
+      }
+      // if array is not 0 or 1, something is messed up
+      else {
+        return cb({message: "Something is really wrong. Apparently your email belongs to more than one existing user"});
+      }
+    }
+  });
+};
 
 module.exports = User;
