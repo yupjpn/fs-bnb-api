@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
@@ -8,6 +9,7 @@ const Property = require("./property");
 const Booking = require("./booking");
 
 // why do we have this? do we need to keep this?
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -20,12 +22,38 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post("/api/users", (req, res) => {
     const user = req.body;
-    User.createUser(user, (err, result) => {
+    console.log(user);
+
+    // DECLARING the callback for createUser, which will execute once all the query stuff
+    // is done and the callback function in mysqlConn.query is finished
+    var cb = (err, result) => {
         console.log(err);
         console.log(result);
-        return res.status(200).json({id: result});
-    });
+        return res.status(200).json({user: result});
+    };
+
+    // CALLING the function createUser
+    User.createUser(user, cb);
 });
+
+// app.post("/api/users/authentication", (req, res) => {
+//     const user = req.body;
+//     const userEmail = user.email;
+//     const userPassword = user.password;
+//     console.log(userEmail);
+//     console.log(userPassword);
+
+//     // DECLARING the callback for createUser, which will execute once all the query stuff
+//     // is done and the callback function in mysqlConn.query is finished
+//     var cb = (err, result) => {
+//         console.log(err);
+//         console.log(result);
+//         return res.status(200).json({user: result});
+//     };
+
+//     // CALLING the function createUser
+//     User.getUserByEmail(userEmail, cb);
+// });
 
 // app.post("/api/users", (req, res) => {
 //     // req.body is what we input
@@ -80,11 +108,15 @@ app.post("/api/users", (req, res) => {
 
 app.post("/api/owners", (req, res) => {
     const owner = req.body;
-    Owner.createOwner(owner, (err, result) => {
+
+    var cb = (err, result) => {
         console.log(err);
         console.log(result);
-        return res.status(200).json({id: result});
-    });
+        return res.status(200).json({owner: result});
+    };
+
+    Owner.createOwner(owner, cb);
+
 });
 
 
