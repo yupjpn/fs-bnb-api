@@ -58,21 +58,7 @@ User.getUserByEmail = function(userEmail, cb) {
     }
     else {
       console.log(dbResult);
-
-      // dbResult is an array of all the users that fit the criteria
-      // if length is 0, this means they haven't registered yet
-      if (dbResult.length == 0) {
-        console.log("length is 0");
-        return cb({message: "Your email doesn't exist in our database. Are you sure you've registered?"});
-      }
-      else if (dbResult.length == 1) {
-        console.log("length is 1");
-        return cb(null, dbResult[0]);
-      }
-      // if array is not 0 or 1, something is messed up
-      else {
-        return cb({message: "Your email appears to belongs to more than one existing user..."});
-      }
+      return cb(null, dbResult);
     }
   });
 };

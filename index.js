@@ -48,7 +48,21 @@ app.post("/api/users/authentication", (req, res) => {
     var cb = (err, result) => {
         console.log(err);
         console.log(result);
-        return res.status(200).json({user: result});
+
+        if (result.length == 0) {
+            return res.status(400).json({message: "Email does not exist."});            
+        }
+        else if (result.length == 1) {
+            if (result[0].password == user.password) {
+                return res.status(200).json({user: result});
+            }
+            else {
+                return res.status(400).json({message: "Incorrect password."});            
+            }
+        }
+        else {
+            return res.status(400).json({message: "Error. Please try again later."});            
+        }
     };
 
     // CALLING the function createUser
