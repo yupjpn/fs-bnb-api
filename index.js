@@ -5,6 +5,7 @@ const app = express();
 const User = require("./user");
 const Owner = require("./owner");
 const Property = require("./property");
+const Booking = require("./booking");
 
 // why do we have this? do we need to keep this?
 app.use(express.json());
@@ -180,6 +181,22 @@ app.post("/api/properties", (req, res) => {
 
 //     console.log(properties);
 // });
+
+app.post("/api/properties/:id/bookings", (req, res) => {
+    const propertyId = req.params.id;
+    const booking = req.body;
+    booking.property_id = propertyId;
+    booking.status = "NEW";
+
+    Booking.createBooking(booking, (err, result) => {
+        console.log(err);
+        console.log(result);
+        return res.status(200).json({id: result});
+    });
+});
+
+//     const propertyId = req.params.id;
+//     const booking = req.body;
 
 // // create new booking request
 // app.post("/api/properties/:id/bookings", (req, res) => {

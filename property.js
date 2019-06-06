@@ -2,7 +2,7 @@ var mysqlConn = require("./db");
 
 var Property = function(property) {
     this.property_name = property.property_name;
-    this.owner_name = property.owner_name;
+    this.owner_id = property.owner_id;
     this.location = property.location;
     this.image_link = property.image_link;
     this.price = property.price;
