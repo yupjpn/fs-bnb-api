@@ -1,6 +1,6 @@
-var mysqlConn = require("./db");
+let mysqlConn = require("./db");
 
-var Owner = function(owner) {
+let Owner = function(owner) {
     this.firstname = owner.firstname;
     this.lastname = owner.lastname;
     this.email = owner.email;

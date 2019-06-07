@@ -29,6 +29,11 @@ app.post("/api/users", (req, res) => {
     let cb = (err, result) => {
         console.log(err);
         console.log(result);
+
+        if (err) {
+            return res.status(400).json({message: "Error. Could not insert user into database."});
+        }
+        // if there are no errors:
         return res.status(200).json({user: result});
     };
 

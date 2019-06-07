@@ -1,11 +1,11 @@
-var mysqlConn = require("./db");
+let mysqlConn = require("./db");
 
 // DECLARING the class User
-var User = function(user) {
+// user is passed in
+let User = function(user) {
     // DELCARING instance variables for class User
-    this.firstname = user.firstname;
-    this.lastname = user.lastname;
-    this.location = user.location;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
     this.email = user.email;
     this.password = user.password;
 };
@@ -35,10 +35,10 @@ User.createUser = function(newUser, cb) {
       console.log(dbResult);
 
       // user to send back to client
-      var responseUser = {
+      let responseUser = {
         id: dbResult.insertId,
-        firstname: newUser.firstname,
-        lastname: newUser.lastname,
+        firstname: newUser.firstName,
+        lastname: newUser.lastName,
         email: newUser.email,
         password: newUser.password
     };
