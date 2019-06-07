@@ -57,11 +57,11 @@ app.post("/api/users/authentication", (req, res) => {
                 return res.status(200).json({user: result});
             }
             else {
-                return res.status(400).json({message: "Incorrect password."});            
+                return res.status(401).json({message: "Incorrect password."});            
             }
         }
         else {
-            return res.status(400).json({message: "Error. Please try again later."});            
+            return res.status(402).json({message: "Error. Please try again later."});            
         }
     };
 
