@@ -26,7 +26,7 @@ app.post("/api/users", (req, res) => {
 
     // DECLARING the callback for createUser, which will execute once all the query stuff
     // is done and the callback function in mysqlConn.query is finished
-    var cb = (err, result) => {
+    let cb = (err, result) => {
         console.log(err);
         console.log(result);
         return res.status(200).json({user: result});
@@ -34,6 +34,36 @@ app.post("/api/users", (req, res) => {
 
     // CALLING the function createUser
     User.createUser(user, cb);
+});
+
+app.get("/api/users/:id", (req, res) => {
+    const userId = req.params.id;
+
+    // checks that query param is an integer
+    const numberUsedId = parseInt(userId);
+    if (isNaN(numberUsedId)) {
+        return res.status(400).json({message: "User ID inputted should be an integer"});
+    }
+    if (! userId) {
+        return res.status(400).json({message: "You did not pass in a user ID"});
+    }
+
+    console.log(userId);
+
+    let cb = (err, result) => {
+        consolelog(err);
+        console.log(result);
+
+        if (result.length == 0) {
+            return res.status(400).json({message: "User ID does not exist."});            
+        }
+        else if (result.length == 1) {
+            return res.status(200).json({user: result[0]});
+        }
+    }
+
+    // when getUserById returns, it will 
+    User.getUserById(userId, cb);
 });
 
 app.post("/api/users/authentication", (req, res) => {
@@ -45,7 +75,7 @@ app.post("/api/users/authentication", (req, res) => {
 
     // DECLARING the callback for createUser, which will execute once all the query stuff
     // is done and the callback function in mysqlConn.query is finished
-    var cb = (err, result) => {
+    let cb = (err, result) => {
         console.log(err);
         console.log(result);
 
@@ -59,7 +89,10 @@ app.post("/api/users/authentication", (req, res) => {
     };
 
     // CALLING the function getUserByEmail
+    // CALL above function cb when User.getUserByEmail function returns 
     User.getUserByEmail(userEmail, userPassword, cb);
+
+
 });
 
 // app.post("/api/users", (req, res) => {

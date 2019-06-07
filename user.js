@@ -65,4 +65,19 @@ User.getUserByEmail = function(userEmail, userPassword, cb) {
   });
 };
 
+User.getUserById = function(userId, cb) {
+  mysqlConn.query("SELECT * FROM user WHERE id = ?", [userId], function(err, dbResult) {
+    console.log(userId);
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      console.log(dbResult);
+      return cb(null, dbResult);
+    }
+  });
+};
+
 module.exports = User;
