@@ -53,7 +53,8 @@ app.post("/api/users/authentication", (req, res) => {
             return res.status(400).json({message: "Log in failed. Are you sure you have registered?"});            
         }
         else if (result.length == 1) {
-            return res.status(200).json({user: result});
+            // result is an array, so return first element in it
+            return res.status(200).json({user: result[0]});
         }
     };
 
