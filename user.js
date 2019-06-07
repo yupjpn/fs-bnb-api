@@ -49,9 +49,11 @@ User.createUser = function(newUser, cb) {
   });
 };
 
-User.getUserByEmail = function(userEmail, cb) {
-  mysqlConn.query("SELECT * FROM user WHERE email = ?", userEmail, function(err, dbResult) {
+User.getUserByEmail = function(userEmail, userPassword, cb) {
+  mysqlConn.query("SELECT * FROM user WHERE email = ? and password = ?", [userEmail, userPassword], function(err, dbResult) {
     console.log(userEmail);
+    console.log(userPassword);
+
     if (err) {
       console.log("error: ", err);
       return cb({message: err});

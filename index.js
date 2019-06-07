@@ -50,23 +50,15 @@ app.post("/api/users/authentication", (req, res) => {
         console.log(result);
 
         if (result.length == 0) {
-            return res.status(400).json({message: "Email does not exist."});            
+            return res.status(400).json({message: "Log in failed. Are you sure you have registered?"});            
         }
         else if (result.length == 1) {
-            if (result[0].password == user.password) {
-                return res.status(200).json({user: result});
-            }
-            else {
-                return res.status(401).json({message: "Incorrect password."});            
-            }
-        }
-        else {
-            return res.status(402).json({message: "Error. Please try again later."});            
+            return res.status(200).json({user: result});
         }
     };
 
-    // CALLING the function createUser
-    User.getUserByEmail(userEmail, cb);
+    // CALLING the function getUserByEmail
+    User.getUserByEmail(userEmail, userPassword, cb);
 });
 
 // app.post("/api/users", (req, res) => {
