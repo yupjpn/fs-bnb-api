@@ -51,7 +51,7 @@ app.get("/api/users/:id", (req, res) => {
     console.log(userId);
 
     let cb = (err, result) => {
-        consolelog(err);
+        console.log(err);
         console.log(result);
 
         if (result.length == 0) {
