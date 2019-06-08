@@ -1,8 +1,8 @@
 let mysqlConn = require("./db");
 
 let Owner = function(owner) {
-    this.firstname = owner.firstname;
-    this.lastname = owner.lastname;
+    this.firstName = owner.firstName;
+    this.lastName = owner.lastName;
     this.email = owner.email;
     this.password = owner.password;
   };
@@ -29,8 +29,8 @@ Owner.createOwner = function(newOwner, cb) {
       // owner to send back to client
       let responseOwner = {
         id: dbResult.insertId,
-        firstname: newOwner.firstname,
-        lastname: newOwner.lastname,
+        firstname: newOwner.firstName,
+        lastname: newOwner.lastName,
         email: newOwner.email,
         password: newOwner.password
     };
