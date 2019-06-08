@@ -27,7 +27,7 @@ Owner.createOwner = function(newOwner, cb) {
       console.log(dbResult);
 
       // owner to send back to client
-      var responseOwner = {
+      let responseOwner = {
         id: dbResult.insertId,
         firstname: newOwner.firstname,
         lastname: newOwner.lastname,

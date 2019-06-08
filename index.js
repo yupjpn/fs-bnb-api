@@ -13,13 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// have multiple arrays, like users, properties, etc.
-// var users = new Array();
-// var properties = new Array();
-
-// var bookingsMap = new Map();
-// var bookingCount = 0;
-
+// CREATE NEW USER
 app.post("/api/users", (req, res) => {
     const user = req.body;
     console.log(user);
@@ -41,6 +35,7 @@ app.post("/api/users", (req, res) => {
     User.createUser(user, cb);
 });
 
+// PASS IN USER ID AND RETURN USER WITH THAT ID
 app.get("/api/users/:id", (req, res) => {
     const userId = req.params.id;
 
@@ -71,6 +66,7 @@ app.get("/api/users/:id", (req, res) => {
     User.getUserById(userId, cb);
 });
 
+// AUTHENTICATE (LOGIN) USER
 app.post("/api/users/authentication", (req, res) => {
     const user = req.body;
     const userEmail = user.email;
@@ -100,117 +96,47 @@ app.post("/api/users/authentication", (req, res) => {
 
 });
 
-// app.post("/api/users", (req, res) => {
-//     // req.body is what we input
-//     const user = req.body;
-
-//     const bodyFirstname = user.firstname;
-//     const bodyLastname = user.lastname;
-//     const bodyEmail = user.email;
-//     const bodyPassword = user.password;
-
-//     var errors = [];
-//     if (! bodyFirstname) {
-//         errors.push({message: "Invalid firsname"});
-//     }
-
-//     if (! bodyLastname) {
-//         errors.push({message: "Invalid lastname"});
-//     }
-
-//     if (! bodyEmail) {
-//         errors.push({message: "Invalid email"});
-//     }
-
-//     if (! bodyPassword) {
-//         errors.push({message: "Invalid password"});
-//     }
-
-//     if (errors.length > 0) {
-//         return res.status(400).json({errorMessages: errors});
-//     }
-
-//     for (var k = 0; k < users.length; k++) {
-//         const aUser = users[k];
-//         if (aUser.email === bodyEmail) {
-//             return res.status(400).json({message: "User exists with that email"});
-//         }
-//     }
-
-//     var newUser = {
-//         id: users.length + 1,
-//         firstname: bodyFirstname,
-//         lastname: bodyLastname,
-//         email: bodyEmail,
-//         password: bodyPassword
-//     };
-
-//     users.push(newUser);
-//     res.json(newUser);
-
-//     console.log(users);
-// });
-
+// CREATE NEW OWNER (aka provider)
 app.post("/api/owners", (req, res) => {
     const owner = req.body;
+    console.log(owner);
 
-    var cb = (err, result) => {
+    let cb = (err, result) => {
         console.log(err);
         console.log(result);
+
+        if (err) {
+            return res.status(400).json({message: "Error. Could not insert provider into database."});
+        }
+        // if there are no errors:
         return res.status(200).json({owner: result});
     };
 
-    Owner.createOwner(owner, cb);
-
+    // CALLING the function createOwner
+    User.createOwner(owner, cb);
 });
 
-
-// app.post("/api/users/authentication", (req, res) => {
-//     const user = req.body;
-    
-//     const bodyEmail = user.email;
-//     const bodyPassword = user.password;
-
-//     var errors = [];
-//     if (! bodyEmail) {
-//         errors.push({message: "Invalid email"});
-//     }
-
-//     if (! bodyPassword) {
-//         errors.push({message: "Invalid password"});
-//     }
-
-//     if (errors.length > 0) {
-//         return res.status(400).json({errorMessages: errors});
-//     }
-    
-//     console.log(users);
-
-//     let foundUser = null;
-//     for (var k = 0; k < users.length; k++) {
-//         const aUser = users[k];
-//         console.log(aUser);
-//         if (aUser.email === bodyEmail && aUser.password === bodyPassword) {
-//             foundUser = aUser;
-//         }
-//     }
-
-//     if (foundUser == null) {
-//         return res.status(400).json({message: "Email and password are incorrect or you haven't registered"});  
-//     }
-//     else {
-//         res.json(foundUser);
-//     }
-
-// });
-
+// CREATE PROPERTY 
 app.post("/api/properties", (req, res) => {
+    // this is the property that is newProperty in property.js
     const property = req.body;
-    Property.createProperty(property, (err, result) => {
+    console.log(property);
+
+    // DELCARING the callback for createProperty, which will execute once
+    // the query and its callback function is done
+    let cb = (err, result) => {
         console.log(err);
         console.log(result);
-        return res.status(200).json({id: result});
-    });
+
+        if (err) {
+            return res.status(400).json({message: "Error. Could not create new property."});
+        }
+        // if there are no errors:
+        return res.status(200).json({property: result});
+    };
+
+
+    Property.createProperty(property, cb);
 });
 
 // // create new property, add to properties array
