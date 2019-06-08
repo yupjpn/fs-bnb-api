@@ -113,7 +113,7 @@ app.post("/api/owners", (req, res) => {
     };
 
     // CALLING the function createOwner
-    User.createOwner(owner, cb);
+    Owner.createOwner(owner, cb);
 });
 
 // CREATE PROPERTY 
