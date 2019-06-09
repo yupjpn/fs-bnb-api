@@ -48,7 +48,7 @@ Booking.createBooking = function(newBooking, cb) {
   });
 };
 
-Property.getBookingsByPropertyId = function(propertyId, cb) {
+Booking.getBookingsByPropertyId = function(propertyId, cb) {
   mysqlConn.query("SELECT * FROM booking WHERE property_id = ?", [propertyId], function(err, dbResult) {
     console.log(propertyId);
 
