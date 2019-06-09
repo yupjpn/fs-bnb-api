@@ -41,4 +41,22 @@ Owner.createOwner = function(newOwner, cb) {
   });
 };
 
+Owner.getOwnerByEmail = function(ownerEmail, ownerPassword, cb) {
+  mysqlConn.query("SELECT * FROM owner WHERE email = ? and password = ?", [ownerEmail, ownerPassword], function(err, dbResult) {
+    console.log("Email:");    
+    console.log(ownerEmail);
+    console.log("Password:");    
+    console.log(ownerPassword);
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      console.log(dbResult);
+      return cb(null, dbResult);
+    }
+  });
+};
+
 module.exports = Owner;

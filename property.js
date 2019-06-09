@@ -1,24 +1,22 @@
 var mysqlConn = require("./db");
 
 var Property = function(property) {
-    this.property_name = property.property_name;
+    this.name = property.name;
     this.owner_id = property.owner_id;
     this.location = property.location;
-    this.image_link = property.image_link;
+    this.imageLink = property.imageLink;
     this.price = property.price;
 };
 
-Property.createProperty = function(newProperty, result) {
-  mysqlConn.query("INSERT INTO property set ?", newProperty, function(err, res) {
+Property.createProperty = function(newProperty, cb) {
+  mysqlConn.query("INSERT INTO property set ?", newProperty, function(err, dbResult) {
     if (err) {
       console.log("error: ", err);
 
       if (err.code === "ER_DUP_ENTRY") {
-        //return res.status(400).json({message: err.sqlMessage});
         return cb({message: err.sqlMessage});
       }
       else {
-        //return res.status(500).json({message: "Failed to insert"});
         return cb({message: "Failed to insert"});
       }
     } 
@@ -26,18 +24,17 @@ Property.createProperty = function(newProperty, result) {
     else {
       console.log(dbResult);
 
-      // user to send back to client
-      let responseUser = {
+      // property to send back to client
+      let responseProperty = {
         id: dbResult.insertId,
-
-        property_name: newProperty.property_name,
+        name: newProperty.name,
         owner_id: newProperty.owner_id,
         location: newProperty.location,
-        image_link: newProperty.image_link,
+        imageLink: newProperty.imageLink,
         price: newProperty.price
     };
 
-    return cb(null, responseUser);
+    return cb(null, responseProperty);
     }
   });
 };

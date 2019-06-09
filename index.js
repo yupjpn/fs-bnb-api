@@ -74,14 +74,14 @@ app.post("/api/users/authentication", (req, res) => {
     console.log(userEmail);
     console.log(userPassword);
 
-    // DECLARING the callback for createUser, which will execute once all the query stuff
+    // DECLARING the callback for getUserByEmail, which will execute once all the query stuff
     // is done and the callback function in mysqlConn.query is finished
     let cb = (err, result) => {
         console.log(err);
         console.log(result);
 
         if (result.length == 0) {
-            return res.status(400).json({message: "Log in failed. Are you sure you have registered?"});            
+            return res.status(400).json({message: "Login failed. Are you sure you have registered?"});            
         }
         else if (result.length == 1) {
             // result is an array, so return first element in it
@@ -92,7 +92,6 @@ app.post("/api/users/authentication", (req, res) => {
     // CALLING the function getUserByEmail
     // CALL above function cb when User.getUserByEmail function returns 
     User.getUserByEmail(userEmail, userPassword, cb);
-
 
 });
 
@@ -116,10 +115,42 @@ app.post("/api/owners", (req, res) => {
     Owner.createOwner(owner, cb);
 });
 
+// AUTHENTICATE (LOGIN) USER
+app.post("/api/owners/authentication", (req, res) => {
+    const owner = req.body;
+    const ownerEmail = owner.email;
+    const ownerPassword = owner.password;
+    console.log("Email:");
+    console.log(ownerEmail);
+    console.log("Password:");
+    console.log(ownerPassword);
+
+    // DECLARING the callback for getOwnerByEmail, which will execute once all the query stuff
+    // is done and the callback function in mysqlConn.query is finished
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        if (result.length == 0) {
+            return res.status(400).json({message: "Login failed. Are you sure you have registered?"});            
+        }
+        else if (result.length == 1) {
+            // result is an array, so return first element in it
+            return res.status(200).json({owner: result[0]});
+        }
+    };
+
+    // CALLING the function getOwnerByEmail
+    // CALL above function cb when Owner.getOwnerByEmail function returns 
+    Owner.getOwnerByEmail(ownerEmail, ownerPassword, cb);
+
+});
+
 // CREATE PROPERTY 
 app.post("/api/properties", (req, res) => {
     // this is the property that is newProperty in property.js
     const property = req.body;
+    console.log("Property received by API:");
     console.log(property);
 
     // DELCARING the callback for createProperty, which will execute once
@@ -135,55 +166,8 @@ app.post("/api/properties", (req, res) => {
         return res.status(200).json({property: result});
     };
 
-
     Property.createProperty(property, cb);
 });
-
-// // create new property, add to properties array
-// app.post("/api/properties", (req, res) => {
-//     // req.body is what we input
-//     const property = req.body;
-    
-//     const bodyName = property.name;
-//     const bodyLocation = property.location;
-//     const bodyImageUrl = property.imageUrl;
-//     const bodyPrice = property.price;
-
-//     var errors = [];
-
-//     if (! bodyName) {
-//         errors.push({message: "Invalid name"});
-//     }
-
-//     if (! bodyLocation) {
-//         errors.push({message: "Invalid location"});
-//     }
-
-//     if (! bodyImageUrl) {
-//         errors.push({message: "Invalid image URL"});
-//     }
-
-//     if (! bodyPrice || isNaN(bodyPrice)) {
-//         errors.push({message: "Invalid price"});
-//     }
-
-//     if (errors.length > 0) {
-//         return res.status(400).json({errorMessages: errors});
-//     }
-
-//     var newProperty = {
-//         id: properties.length + 1,
-//         name: bodyName,
-//         location: bodyLocation,
-//         imageUrl: bodyImageUrl,
-//         price: bodyPrice
-//     };
-
-//     properties.push(newProperty);
-//     res.json(newProperty);
-
-//     console.log(properties);
-// });
 
 app.post("/api/properties/:id/bookings", (req, res) => {
     const propertyId = req.params.id;
