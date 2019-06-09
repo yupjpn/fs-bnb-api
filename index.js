@@ -40,8 +40,8 @@ app.get("/api/users/:id", (req, res) => {
     const userId = req.params.id;
 
     // checks that query param is an integer
-    const numberUsedId = parseInt(userId);
-    if (isNaN(numberUsedId)) {
+    const numberUserId = parseInt(userId);
+    if (isNaN(numberUserId)) {
         return res.status(400).json({message: "User ID inputted should be an integer"});
     }
     if (! userId) {
@@ -169,161 +169,68 @@ app.post("/api/properties", (req, res) => {
     Property.createProperty(property, cb);
 });
 
-app.post("/api/properties/:id/bookings", (req, res) => {
-    const propertyId = req.params.id;
-    const booking = req.body;
-    booking.property_id = propertyId;
-    booking.status = "NEW";
+// PASS IN OWNER ID AND RETURN ARRAY OF RENTALS MATCHING OWNER ID
+app.get("/api/properties/ownerId/:ownerId/", (req, res) => {
+    const ownerId = req.params.ownerId;
 
-    Booking.createBooking(booking, (err, result) => {
+    // checks that query param is an integer
+    const numberOwnerId = parseInt(ownerId);
+    if (isNaN(numberOwnerId)) {
+        return res.status(400).json({message: "Invalid owner ID"});
+    }
+    if (! ownerId) {
+        return res.status(400).json({message: "Owner ID was not passed in"});
+    }
+
+    console.log(ownerId);
+
+    let cb = (err, result) => {
         console.log(err);
         console.log(result);
-        return res.status(200).json({id: result});
-    });
+
+        // returns an array of rentals matching the owner ID
+        return res.status(200).json({rentals: result});
+    }
+
+    Property.getPropertiesByOwnerId(numberOwnerId, cb);
 });
 
-//     const propertyId = req.params.id;
-//     const booking = req.body;
+app.get("/api/properties/propertyId/:propertyId", (req, res) => {
+    const propertyId = req.params.propertyId;
 
-// // create new booking request
+    // checks that query param is an integer
+    const numberPropertyId = parseInt(propertyId);
+    if (isNaN(numberPropertyId)) {
+        return res.status(400).json({message: "Invalid property ID"});
+    }
+    if (! propertyId) {
+        return res.status(400).json({message: "Property ID was not passed in"});
+    }
+
+    console.log(propertyId);
+
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        // returns an array of rentals matching the owner ID
+        return res.status(200).json({rental: result});
+    }
+
+    Property.getPropertiesById(numberPropertyId, cb);
+});
+
 // app.post("/api/properties/:id/bookings", (req, res) => {
-//     // req.body is what we input
 //     const propertyId = req.params.id;
 //     const booking = req.body;
-    
-//     // ideally, dateFrom and dateTo should be date objects (ask Miki tomorrow how to do this)
-//     const bodyDateFrom = booking.dateFrom;
-//     const bodyDateTo = booking.dateTo;
-//     const bodyUserId = booking.userId;
+//     booking.property_id = propertyId;
+//     booking.status = "NEW";
 
-//     const numberPropertyId = parseInt(propertyId);
-//     if(isNaN(numberPropertyId)) {
-//         return res.status(400).json({message: "I am expecting an integer"});
-//     }
-
-//     // ultimately, we need to check if user and property whose IDs are above actually exist
-//     var errors = [];
-
-//     if (! bodyDateFrom) {
-//         errors.push({message: "Invalid date from"});
-//     }
-
-//     if (! bodyDateTo) {
-//         errors.push({message: "Invalid date to"});
-//     }
-
-//     if (! bodyUserId) {
-//         errors.push({message: "Invalid user ID"});
-//     }
-
-//     if (! propertyId) {
-//         errors.push({message: "Invalid property ID"});
-//     }
-
-//     if (errors.length > 0) {
-//         return res.status(400).json({errorMessages: errors});
-//     }
-
-//     bookingCount++;
-
-//     var newBooking = {
-//         id: bookingCount,
-//         dateFrom: bodyDateFrom,
-//         dateTo: bodyDateTo,
-//         userId: bodyUserId,
-//         propertyId: numberPropertyId,
-//         status: "NEW"
-//     };
-
-//     if (! bookingsMap.has(numberPropertyId)) {
-//         bookingsMap.set(numberPropertyId, new Array());
-//     }
-    
-//     bookingsMap.get(numberPropertyId).push(newBooking);
-
-//     res.json(newBooking);
-
-//     console.log(bookingsMap);
-// });
-
-// app.get("/api/properties/:id", (req, res) => {
-//     const propertyId = req.params.id;
-
-//     const numberPropertyId = parseInt(propertyId);
-//     if(isNaN(numberPropertyId)) {
-//         return res.status(400).json({message: "I am expecting an integer"});
-//     }
-
-//     if (! propertyId) {
-//         return res.status(400).json({message: "Please pass in a propertyId"});
-//     }
-
-//     for (var k = 0; k < properties.length; k++) {
-//         const aProperty = properties[k];
-//         if (aProperty.id == propertyId) {
-//             return res.status(200).json(aProperty);
-//         }
-//     }
-
-//     return res.status(404).json({message: "Property not found"});
-// });
-
-// // Get array of bookings from propertyId
-// app.get("/api/properties/:id/bookings", (req, res) => {
-//     const propertyId = req.params.id;
-
-//     const numberPropertyId = parseInt(propertyId);
-//     if(isNaN(numberPropertyId)) {
-//         return res.status(400).json({message: "I am expecting an integer"});
-//     }
-
-//     if (! propertyId) {
-//         return res.status(400).json({message: "Please pass in a propertyId"});
-//     }
-
-//     if (bookingsMap.has(numberPropertyId)) {
-//         return res.status(200).json(bookingsMap.get(numberPropertyId));
-//     }
-//     else {
-//         return res.status(404).json({message: "Property not found"});
-//     }
-// });
-
-// app.delete("/api/properties/:id", (req, res) => {
-//     const propertyId = req.params.id;
-
-//     const numberPropertyId = parseInt(propertyId);
-//     if(isNaN(numberPropertyId)) {
-//         return res.status(400).json({message: "I am expecting an integer"});
-//     }
-
-//     if (!propertyId) {
-//         return res.status(400).json({message: "Please pass in a propertyId"});
-//     }
-
-//     foundProperty = false;
-//     // loop through properties, remove if id is the same
-//     for (var k = 0; k < properties.length; k++) {
-//         const aProperty = properties[k];
-//         if (aProperty.id == propertyId) {
-//             // remove property at index k, we are removing 1 property
-//             properties.splice(k, 1);
-//             foundProperty = true;
-//             // if found, break out of for loop
-//             break;
-//         }
-//     }
-
-//     console.log(properties);
-
-
-//     if (foundProperty == true) {
-//         return res.status(200).json({message: "Property deleted"});
-//     }
-//     else {
-//         return res.status(404).json({message: "Property not found"});
-//     }
-
+//     Booking.createBooking(booking, (err, result) => {
+//         console.log(err);
+//         console.log(result);
+//         return res.status(200).json({id: result});
+//     });
 // });
 
 const PORT = process.env.PORT || 3000;

@@ -39,4 +39,36 @@ Property.createProperty = function(newProperty, cb) {
   });
 };
 
+Property.getPropertiesByOwnerId = function(ownerId, cb) {
+  mysqlConn.query("SELECT * FROM property WHERE owner_id = ?", [ownerId], function(err, dbResult) {
+    console.log(ownerId);
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      console.log(dbResult);
+      return cb(null, dbResult);
+    }
+  });
+};
+
+Property.getPropertiesById = function(propertyId, cb) {
+  mysqlConn.query("SELECT * FROM property WHERE id = ?", [propertyId], function(err, dbResult) {
+    console.log(propertyId);
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    // Should only be one property, so dbResult should be of length 1
+    // Return first element in that array, not the array itself
+    else {
+      console.log(dbResult);
+      return cb(null, dbResult[0]);
+    }
+  });
+};
+
 module.exports = Property;
