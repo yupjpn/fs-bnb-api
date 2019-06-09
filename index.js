@@ -169,6 +169,20 @@ app.post("/api/properties", (req, res) => {
     Property.createProperty(property, cb);
 });
 
+// GET ALL PROPERTIES (AKA LISTINGS/RENTALS)
+app.get("/api/properties/", (req, res) => {
+
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        // returns an array of rentals 
+        return res.status(200).json({rentals: result});
+    }
+
+    Property.getAllProperties(cb);
+});
+
 // PASS IN OWNER ID AND RETURN ARRAY OF RENTALS MATCHING OWNER ID
 app.get("/api/properties/ownerId/:ownerId/", (req, res) => {
     const ownerId = req.params.ownerId;
@@ -220,18 +234,52 @@ app.get("/api/properties/propertyId/:propertyId", (req, res) => {
     Property.getPropertiesById(numberPropertyId, cb);
 });
 
-// app.post("/api/properties/:id/bookings", (req, res) => {
-//     const propertyId = req.params.id;
-//     const booking = req.body;
-//     booking.property_id = propertyId;
-//     booking.status = "NEW";
+// CREATE NEW BOOKING
+app.post("/api/bookings", (req, res) => {
+    const booking = req.body;
+    console.log(booking);
 
-//     Booking.createBooking(booking, (err, result) => {
-//         console.log(err);
-//         console.log(result);
-//         return res.status(200).json({id: result});
-//     });
-// });
+    // DECLARING the callback for createUser, which will execute once all the query stuff
+    // is done and the callback function in mysqlConn.query is finished
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        if (err) {
+            return res.status(400).json({message: "Error. Could not insert booking into database."});
+        }
+        // if there are no errors:
+        return res.status(200).json({booking: result});
+    };
+
+    // CALLING the function createUser
+    Booking.createBooking(booking, cb);
+});
+
+app.get("/api/bookings/:propertyId", (req, res) => {
+    const propertyId = req.params.propertyId;
+
+    // checks that query param is an integer
+    const numberPropertyId = parseInt(propertyId);
+    if (isNaN(numberPropertyId)) {
+        return res.status(400).json({message: "Invalid property ID"});
+    }
+    if (! propertyId) {
+        return res.status(400).json({message: "Property ID was not passed in"});
+    }
+
+    console.log(propertyId);
+
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        // returns an array of rentals matching the owner ID
+        return res.status(200).json({bookings: result});
+    }
+
+    Booking.getBookingsByPropertyId(numberPropertyId, cb);
+});
 
 const PORT = process.env.PORT || 3000;
 

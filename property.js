@@ -39,6 +39,21 @@ Property.createProperty = function(newProperty, cb) {
   });
 };
 
+Property.getAllProperties = function(cb) {
+  mysqlConn.query("SELECT * FROM property", function(err, dbResult) {
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      // result is an array of all properties
+      console.log(dbResult);
+      return cb(null, dbResult);
+    }
+  });
+};
+
 Property.getPropertiesByOwnerId = function(ownerId, cb) {
   mysqlConn.query("SELECT * FROM property WHERE owner_id = ?", [ownerId], function(err, dbResult) {
     console.log(ownerId);
@@ -70,5 +85,36 @@ Property.getPropertiesById = function(propertyId, cb) {
     }
   });
 };
+
+// Property.updateProperty = function(newProperty, cb) {
+//   mysqlConn.query("INSERT INTO property set ?", newProperty, function(err, dbResult) {
+//     if (err) {
+//       console.log("error: ", err);
+
+//       if (err.code === "ER_DUP_ENTRY") {
+//         return cb({message: err.sqlMessage});
+//       }
+//       else {
+//         return cb({message: "Failed to insert"});
+//       }
+//     } 
+//     // if not an error
+//     else {
+//       console.log(dbResult);
+
+//       // property to send back to client
+//       let responseProperty = {
+//         id: dbResult.insertId,
+//         name: newProperty.name,
+//         owner_id: newProperty.owner_id,
+//         location: newProperty.location,
+//         imageLink: newProperty.imageLink,
+//         price: newProperty.price
+//     };
+
+//     return cb(null, responseProperty);
+//     }
+//   });
+// };
 
 module.exports = Property;
