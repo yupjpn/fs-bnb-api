@@ -59,4 +59,19 @@ Owner.getOwnerByEmail = function(ownerEmail, ownerPassword, cb) {
   });
 };
 
+Owner.getOwnerById = function(ownerId, cb) {
+  mysqlConn.query("SELECT * FROM owner WHERE id = ?", [ownerId], function(err, dbResult) {
+    console.log(ownerId);
+
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      console.log(dbResult);
+      return cb(null, dbResult);
+    }
+  });
+};
+
 module.exports = Owner;

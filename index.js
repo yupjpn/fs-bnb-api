@@ -146,6 +146,36 @@ app.post("/api/owners/authentication", (req, res) => {
 
 });
 
+// PASS IN OWNER ID AND RETURN USER WITH THAT ID
+app.get("/api/owners/:id", (req, res) => {
+    const ownerId = parseInt(req.params.id);
+
+    // checks that query param is an integer
+    if (isNaN(ownerId)) {
+        return res.status(400).json({message: "Owner ID inputted should be an integer"});
+    }
+    if (! ownerId) {
+        return res.status(400).json({message: "You did not pass in an owner ID"});
+    }
+
+    console.log(ownerId);
+
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        if (result.length == 0) {
+            return res.status(400).json({message: "Owner ID does not exist."});            
+        }
+        else if (result.length == 1) {
+            return res.status(200).json({owner: result[0]});
+        }
+    }
+
+    // when getOwnerById returns, it will 
+    Owner.getOwnerById(ownerId, cb);
+});
+
 // CREATE PROPERTY 
 app.post("/api/properties", (req, res) => {
     // this is the property that is newProperty in property.js
