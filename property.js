@@ -86,35 +86,53 @@ Property.getPropertiesById = function(propertyId, cb) {
   });
 };
 
-// Property.updateProperty = function(newProperty, cb) {
-//   mysqlConn.query("INSERT INTO property set ?", newProperty, function(err, dbResult) {
-//     if (err) {
-//       console.log("error: ", err);
+Property.deleteProperty = function(propertyId, cb) {
+  mysqlConn.query("DELETE FROM property WHERE id = ?", [propertyId], function(err, dbResult) {
+    console.log(propertyId);
 
-//       if (err.code === "ER_DUP_ENTRY") {
-//         return cb({message: err.sqlMessage});
-//       }
-//       else {
-//         return cb({message: "Failed to insert"});
-//       }
-//     } 
-//     // if not an error
-//     else {
-//       console.log(dbResult);
+    if (err) {
+      console.log("error: ", err);
+      return cb({message: err});
+    }
+    else {
+      // dbResult doesn't really mean anything here - it's just the number
+      // of rows affected
+      console.log(dbResult);
+      let successMessage = "Property successfully deleted!"
+      return cb(null, successMessage);
+    }
+  });
+};
 
-//       // property to send back to client
-//       let responseProperty = {
-//         id: dbResult.insertId,
-//         name: newProperty.name,
-//         owner_id: newProperty.owner_id,
-//         location: newProperty.location,
-//         imageLink: newProperty.imageLink,
-//         price: newProperty.price
-//     };
+Property.updateProperty = function(newProperty, cb) {
+  mysqlConn.query("UPDATE property SET name = ?, location =?, imageLink = ?, price = ? WHERE id = ?", [newProperty.name, newProperty.location, newProperty.imageLink, newProperty.price, newProperty.id], function(err, dbResult) {
+    if (err) {
+      console.log("error: ", err);
 
-//     return cb(null, responseProperty);
-//     }
-//   });
-// };
+      if (err.code === "ER_DUP_ENTRY") {
+        return cb({message: err.sqlMessage});
+      }
+      else {
+        return cb({message: "Failed to insert"});
+      }
+    } 
+    // if not an error
+    else {
+      console.log(dbResult);
+
+      // property to send back to client
+      let responseProperty = {
+        id: dbResult.insertId,
+        name: newProperty.name,
+        owner_id: newProperty.owner_id,
+        location: newProperty.location,
+        imageLink: newProperty.imageLink,
+        price: newProperty.price
+    };
+
+    return cb(null, responseProperty);
+    }
+  });
+};
 
 module.exports = Property;

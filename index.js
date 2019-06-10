@@ -234,6 +234,53 @@ app.get("/api/properties/propertyId/:propertyId", (req, res) => {
     Property.getPropertiesById(numberPropertyId, cb);
 });
 
+// DELETE PROPERTY
+app.delete("/api/properties/:id", (req, res) => {
+    const propertyId = parseInt(req.params.id);
+
+    if (isNaN(propertyId)) {
+        return res.status(400).json({message: "Invalid property ID"});
+    }
+    if (! propertyId) {
+        return res.status(400).json({message: "Property ID was not passed in"});
+    }
+
+    console.log(propertyId);
+
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        // returns an array of rentals matching the owner ID
+        return res.status(200).json(result);
+    }
+
+    Property.deleteProperty(propertyId, cb);
+});
+
+// UPDATE PROPERTY 
+app.post("/api/properties/update", (req, res) => {
+    // this is the property that is newProperty in property.js
+    const property = req.body;
+    console.log("Property received by API:");
+    console.log(property);
+
+    // DELCARING the callback for createProperty, which will execute once
+    // the query and its callback function is done
+    let cb = (err, result) => {
+        console.log(err);
+        console.log(result);
+
+        if (err) {
+            return res.status(400).json({message: "Error. Could not update property."});
+        }
+        // if there are no errors:
+        return res.status(200).json({property: result});
+    };
+
+    Property.updateProperty(property, cb);
+});
+
 // CREATE NEW BOOKING
 app.post("/api/bookings", (req, res) => {
     const booking = req.body;
@@ -280,6 +327,7 @@ app.get("/api/bookings/:propertyId", (req, res) => {
 
     Booking.getBookingsByPropertyId(numberPropertyId, cb);
 });
+
 
 const PORT = process.env.PORT || 3000;
 
